@@ -27,11 +27,11 @@ if ($selected_site_type) {
     echo "<table border = 1>";                                            
     echo "<tr><th align='left'>Site Name</th>";
        
-    $stmt = $pdo->prepare("SELECT Name Sites_Name FROM User,UserVisits,Sites WHERE Users.Email_Address = UserVisits.Email_Address AND Sites.Site_ID = UserVisits.Site_ID Name = ? ORDER BY Rating");
+    $stmt = $pdo->prepare("SELECT Name,Sites_Name,Rating FROM User,UserVisits,Sites WHERE Users.Email_Address = UserVisits.Email_Address AND Sites.Site_ID = UserVisits.Site_ID Name = ? ORDER BY Rating");
     $stmt->execute([$selected_site_type]);
   
     while ($row = $stmt->fetch()) {
-      echo "<tr><td>" . $row["Site_Name"] . "</td>";
+      echo "<tr><td>" . $row["Name"] . "</td><tr><td>" . $row["Site_Name"] . "</td><tr><td>" . $row["Rating"] . "</td>";
     }
   }
   
