@@ -1,17 +1,17 @@
 <?php
 
+//include "dbConn.php";
 include "pdo.php";
-
-$selected_site_type = $_POST["site_type"];
+$selected_site_type = $_POST["category"];
 
 echo "<html><body>";
 echo "<form action='sites.php' method='post'>";
-echo "<select name='site_type'>";
+echo "<select name='category'>";
 
-$result = $pdo->query("SELECT DISTINCT type FROM Site ORDER BY type");
+$result = $pdo->query("SELECT DISTINCT category FROM sites");
 
 while ($row = $result->fetch()) {
-  $type = $row["type"];
+  $type = $row["category"];
   if ($type == $selected_site_type) {
     $option = "<option selected>";
   } else {
@@ -25,15 +25,16 @@ echo "<input type='submit' value='Submit'>";
 echo "</form>";
 
 if ($selected_site_type) {
-  echo "<table border = 1>";                                               //added code underneath
-  echo "<tr><th align='left'>Site Name</th><th align='left'>City</th></tr><th align='left'>Country</th></tr><th align='left'>Visa Required</th></tr>";
-      //updated the query below
-  $stmt = $pdo->prepare("SELECT Site_Name, City_Name, Country_Name, Visa FROM Countries,Cities,Sites WHERE Countries.Country_Name = Cities.Country_Name AND Sites.City_Name = Cities.City_Name AND type = ?");
+  echo "<table border = 1>";                                              
+  echo "<tr><th align='left'>Site Name</th><th align='left'>City</th><th align='left'>Country</th><th align='left'>Visa Required</th></tr>";
+     
+  $stmt = $pdo->prepare("SELECT Sname, sites.city, Cname, visa FROM countries,cities,sites WHERE Cname = cities.country AND sites.city = cities.name AND category = ?");
   $stmt->execute([$selected_site_type]);
 
   while ($row = $stmt->fetch()) {
-    echo "<tr><td>" . $row["Site_Name"] . "</td><td>" . $row["City_Name"] . "</td><td>" . $row["Country_Name"] . "</td><td>" . $row["Visa"] . "</td></tr>";
+    echo "<tr><td>" . $row["Sname"] . "</td><td>" . $row["city"] . "</td><td>" . $row["Cname"] . "</td><td>" . $row["visa"] . "</td></tr>";
   }
+  
 }
 
 echo "</table>";
